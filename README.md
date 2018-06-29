@@ -4,4 +4,4 @@ Use `[TX10BLEDataHelper receivedData:data]` or `[TX10BLEDataHelper receivedBroad
 and get callback with block or delegate
 
 
-Get BLE command from `TX10BLECommands`
+Get BLE command from `TX10BLECommands.h`
