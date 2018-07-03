@@ -29,6 +29,13 @@
 + (NSData *)peripheralTimingCommandWithDate:(NSDate *)date;
 
 /**
+ 获取实时数据指令
+
+ @return 指令
+ */
++ (NSData *)getRealtimeDataCommand;
+
+/**
  请求设备历史数据指令
  
  @param sn 上一条数据序列号(没有则为0)

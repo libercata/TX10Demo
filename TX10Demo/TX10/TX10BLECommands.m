@@ -56,6 +56,11 @@ static NSString * const kSetCurrentTimeHexHeader = @"CD55015306010A2438";
     return data;
 }
 
+static NSString * const kGetRealtimeDataHex = @"CD5501560101007BDB";
++ (NSData *)getRealtimeDataCommand {
+    return [TX10BytesUtils hexToBytes:kGetRealtimeDataHex];
+}
+
 static NSString * const kGetHistoryHexHeader = @"CD550156040108";
 + (NSData *)requestHistoryDataCommandWithSerialNumber:(NSInteger)sn
                                             startDate:(NSDate *)startDate {
