@@ -22,7 +22,7 @@ typedef enum : NSUInteger {
     ValueType_AQI,
 } ValueType;
 
-typedef enum : NSUInteger {
+typedef NS_OPTIONS(NSUInteger, AlarmType) {
     // 警报
     AlarmType_nomarl = (1UL << 1),
     AlarmType_temHigh = (1UL << 2),
@@ -31,6 +31,6 @@ typedef enum : NSUInteger {
     AlarmType_humLow = (1UL << 5),
     // 电量报警
     AlarmType_batteryLow = (1UL << 7),
-} AlarmType;
+};
 
 #endif /* TX10Enum_h */
