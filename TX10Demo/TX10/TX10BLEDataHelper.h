@@ -19,7 +19,7 @@
  */
 - (void)receivedRealtimeData:(SensorDataModel *)model DEPRECATED_MSG_ATTRIBUTE("use BLE Broadcast to get RealtimeData");
 // @param alarmType eg. AlarmType_temHigh|AlarmType_humLow|AlarmType_batteryLow
-- (void)receivedBroadcastedRealtimeData:(SensorDataModel *)model alarmType:(AlarmType)alarmType;
+- (void)receivedBroadcastedRealtimeData:(SensorDataModel *)model alarmType:(AlarmType)alarmType uuid:(NSString *)uuid;
 
 /**
  接收到了历史数据
@@ -84,8 +84,9 @@
  received data from 'advertisementData[@"kCBAdvDataLocalName"]'
  
  @param dataString 实时数据
+ @param uuid 设备uuid 用于判断是哪一个设备
  */
-- (void)receivedBroadcastRealtimeData:(NSString *)dataString;
+- (void)receivedBroadcastRealtimeData:(NSString *)dataString peripheralUUID:(NSString *)uuid;
 
 @property (nonatomic, weak) id<TX10BLEDataHelperDelegate> delegate;
 
@@ -97,7 +98,7 @@
 /**
  接收到了实时数据 */
 @property (nonatomic, copy) void(^receivedRealtimeDataBlock)(SensorDataModel *model) DEPRECATED_MSG_ATTRIBUTE("use BLE Broadcast to get RealtimeData");
-@property (nonatomic, copy) void(^receivedBroadcastedRealtimeDataBlock)(SensorDataModel *model, AlarmType alarmType);
+@property (nonatomic, copy) void(^receivedBroadcastedRealtimeDataBlock)(SensorDataModel *model, AlarmType alarmType, NSString *uuid);
 
 /**
  接收到了历史数据 */

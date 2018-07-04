@@ -23,7 +23,7 @@
     
     _helper = TX10BLEDataHelper.new;
     
-    _helper.receivedBroadcastedRealtimeDataBlock = ^(SensorDataModel *model, AlarmType alarmType) {
+    _helper.receivedBroadcastedRealtimeDataBlock = ^(SensorDataModel *model, AlarmType alarmType, NSString *uuid) {
         NSLog(@"*=*=%s=*=* :\nreceivedBroadcastedRealtimeDataBlock", __func__);
     };
     
@@ -52,7 +52,7 @@
 - (IBAction)action1:(id)sender {
 //    实时广播数据 dataString
 //    Tx0xx0+0+bYBU@piYI
-    [_helper receivedBroadcastRealtimeData:@"Tx0xx0+0+bYBU@piYI"];
+    [_helper receivedBroadcastRealtimeData:@"Tx0xx0+0+bYBU@piYI" peripheralUUID:@""];
 
 }
 - (IBAction)action2:(id)sender {

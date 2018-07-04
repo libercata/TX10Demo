@@ -148,7 +148,7 @@ typedef enum : NSUInteger {
     }
 }
 
-- (void)receivedBroadcastRealtimeData:(NSString *)dataString {
+- (void)receivedBroadcastRealtimeData:(NSString *)dataString peripheralUUID:(NSString *)uuid{
     dataString = [dataString substringFromIndex:5]; // 去除设备名称
     // 报警情况
     NSString *alarmString = [dataString substringWithRange:NSMakeRange(0, 3)];
@@ -235,11 +235,11 @@ typedef enum : NSUInteger {
     
     model.timeItem.date = [NSDate date];
     
-    if ([self.delegate respondsToSelector:@selector(receivedBroadcastedRealtimeData:alarmType:)]) {
-        [self.delegate receivedBroadcastedRealtimeData:model alarmType:type];
+    if ([self.delegate respondsToSelector:@selector(receivedBroadcastedRealtimeData:alarmType: uuid:)]) {
+        [self.delegate receivedBroadcastedRealtimeData:model alarmType:type uuid:uuid];
     }
     if (self.receivedBroadcastedRealtimeDataBlock) {
-        self.receivedBroadcastedRealtimeDataBlock(model, type);
+        self.receivedBroadcastedRealtimeDataBlock(model, type, uuid);
     }
 }
 
