@@ -14,16 +14,16 @@
 
 /**
  接收到了实时数据
-
+ 
  @param model 实时数据模型
  */
-- (void)receivedRealtimeData:(SensorDataModel *)model DEPRECATED_MSG_ATTRIBUTE("use BLE Broadcast to get RealtimeData");
+- (void)receivedRealtimeData:(SensorDataModel *)model DEPRECATED_MSG_ATTRIBUTE("Use BLE Broadcast to get RealtimeData");
 // @param alarmType eg. AlarmType_temHigh|AlarmType_humLow|AlarmType_batteryLow
 - (void)receivedBroadcastedRealtimeData:(SensorDataModel *)model alarmType:(AlarmType)alarmType uuid:(NSString *)uuid;
 
 /**
  接收到了历史数据
-
+ 
  @param model 历史数据模型 (第一次回调时为空 en. model == nil at the first callback)
  @param totalCount 本次传输的历史数据总数（第一次回调时有值 en. available at the first callback）
  */
@@ -37,7 +37,7 @@
 
 /**
  设置好了设备ID
-
+ 
  @param availableValueTypes 设备检测返回的数据类型
  */
 - (void)didSetPeripheralID:(NSArray *)availableValueTypes;
@@ -51,6 +51,7 @@
  收到了设置报警值指令的反馈
  */
 - (void)didSetAlarm;
+
 
 /**
  收到了未知消息
@@ -66,7 +67,7 @@
 
 
 /* ============================================================================== */
-                                #pragma mark -
+#pragma mark -
 /* ============================================================================== */
 
 @interface TX10BLEDataHelper : NSObject
@@ -74,7 +75,7 @@
 /**
  接收从蓝牙设备来的数据
  received data from 'didUpdateValueForCharacteristic:'
-
+ 
  @param data 数据
  */
 - (void)receivedData:(NSData *)data;
@@ -92,12 +93,12 @@
 
 
 /* ============================================================================== */
-                              #pragma mark - Block
+#pragma mark - Block
 /* ============================================================================== */
 
 /**
  接收到了实时数据 */
-@property (nonatomic, copy) void(^receivedRealtimeDataBlock)(SensorDataModel *model) DEPRECATED_MSG_ATTRIBUTE("use BLE Broadcast to get RealtimeData");
+@property (nonatomic, copy) void(^receivedRealtimeDataBlock)(SensorDataModel *model) DEPRECATED_MSG_ATTRIBUTE("Use BLE Broadcast to get RealtimeData");
 @property (nonatomic, copy) void(^receivedBroadcastedRealtimeDataBlock)(SensorDataModel *model, AlarmType alarmType, NSString *uuid);
 
 /**

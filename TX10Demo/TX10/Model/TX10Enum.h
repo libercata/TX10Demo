@@ -24,13 +24,14 @@ typedef enum : NSUInteger {
 
 typedef NS_OPTIONS(NSUInteger, AlarmType) {
     // 警报
-    AlarmType_nomarl = (1UL << 1),
-    AlarmType_temHigh = (1UL << 2),
-    AlarmType_temLow = (1UL << 3),
-    AlarmType_humHigh = (1UL << 4),
-    AlarmType_humLow = (1UL << 5),
+    AlarmType_nomarl = 0,
+    AlarmType_temHigh = (1UL << 1),
+    AlarmType_temLow = (1UL << 2),
+    AlarmType_humHigh = (1UL << 3),
+    AlarmType_humLow = (1UL << 4),
     // 电量报警
-    AlarmType_batteryLow = (1UL << 7),
+    AlarmType_batteryLow = (1UL << 5),
+    AlarmType_batteryReloaded = (1UL << 6),
 };
 
 #endif /* TX10Enum_h */

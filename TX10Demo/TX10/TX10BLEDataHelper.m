@@ -29,13 +29,15 @@ typedef enum : NSUInteger {
     HSPT_timing = 0x06,         // 授时
     HSPT_setAlarm = 0x07,       // 设置报警
     // 警报
-    HSPT_nomarl = 0x30,
+    HSPT_normal = 0x30,
     HSPT_temHigh = 0x31,
     HSPT_temLow = 0x32,
     HSPT_humHigh = 0x34,
     HSPT_humLow = 0x38,
     // 电量报警
+    HSPT_batteryNormal = 0x30,
     HSPT_batteryLow = 0x31,
+    HSPT_batteryReloaded = 0x32,  // 重新上电，需授时
 } HSBLEProtocol;
 
 
@@ -72,7 +74,7 @@ typedef enum : NSUInteger {
 
 #pragma mark -
 - (void)receivedData:(NSData *)data {
-
+    
     if (_waitForMore == NO) {
         self.currentData = [NSMutableData dataWithData:data];
         
@@ -123,7 +125,7 @@ typedef enum : NSUInteger {
     if (bytes[4] == HSPT_historyData) { // 历史数据特殊
         [self parseHistoryData:data];
     } else {
-
+        
         if (bytes[3] == HSPT_orderS) {
             if (bytes[4] == HSPT_setID) {
                 [self parseSetIDFeedback:bytes];
@@ -148,7 +150,7 @@ typedef enum : NSUInteger {
     }
 }
 
-- (void)receivedBroadcastRealtimeData:(NSString *)dataString peripheralUUID:(NSString *)uuid{
+- (void)receivedBroadcastRealtimeData:(NSString *)dataString peripheralUUID:(NSString *)uuid {
     dataString = [dataString substringFromIndex:5]; // 去除设备名称
     // 报警情况
     NSString *alarmString = [dataString substringWithRange:NSMakeRange(0, 3)];
@@ -156,10 +158,14 @@ typedef enum : NSUInteger {
     
     AlarmType type = AlarmType_nomarl;
     if (_realtimeDataID != alarmBytes[1]) { // 判断是否和前一条数据相同
-        if (alarmBytes[2] == HSPT_batteryLow) {
-            type |= AlarmType_batteryLow;
+        if (alarmBytes[2] != HSPT_batteryNormal) {
+            if (alarmBytes[2] == HSPT_batteryLow) {
+                type |= AlarmType_batteryLow;
+            } else if (alarmBytes[2] == HSPT_batteryReloaded) {
+                type |= AlarmType_batteryReloaded;
+            }
         }
-        if (alarmBytes[0] != HSPT_nomarl) {
+        if (alarmBytes[0] != HSPT_normal) {
             _realtimeDataID = alarmBytes[1];
             switch (alarmBytes[0]) {
                 case HSPT_temHigh: {
@@ -199,7 +205,6 @@ typedef enum : NSUInteger {
                     break;
             }
         }
-
     }
     // 实时数据
     NSString *realtimeString = [dataString substringFromIndex:3];
@@ -235,7 +240,7 @@ typedef enum : NSUInteger {
     
     model.timeItem.date = [NSDate date];
     
-    if ([self.delegate respondsToSelector:@selector(receivedBroadcastedRealtimeData:alarmType: uuid:)]) {
+    if ([self.delegate respondsToSelector:@selector(receivedBroadcastedRealtimeData:alarmType:uuid:)]) {
         [self.delegate receivedBroadcastedRealtimeData:model alarmType:type uuid:uuid];
     }
     if (self.receivedBroadcastedRealtimeDataBlock) {
@@ -244,7 +249,7 @@ typedef enum : NSUInteger {
 }
 
 /* ============================================================================== */
-                            #pragma mark - Set
+#pragma mark - Set
 /* ============================================================================== */
 
 /*
@@ -333,11 +338,11 @@ typedef enum : NSUInteger {
 
 
 /* ============================================================================== */
-                            #pragma mark - Data
+#pragma mark - Data
 /* ============================================================================== */
 - (void)parseRealTimeData:(NSData *)data {
     data = [data subdataWithRange:NSMakeRange(7, data.length - 2 - 7)];
-
+    
     SensorDataModel *model = [self sensorDataWithData:data];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -405,7 +410,7 @@ typedef enum : NSUInteger {
     
     // 解析时间数据
     int idx = [TX10BLEDataHelper parseDateTimeData:bytes time:model.timeItem];
-
+    
     for (int i = idx; i < data.length; ) {
         int high5 = (bytes[i] & 0xf8) >> 3;
         //        int low3 = getLow(bytes[i]);
